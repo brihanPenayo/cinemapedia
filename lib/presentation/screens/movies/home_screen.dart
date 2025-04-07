@@ -56,16 +56,32 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     final slideShowMovies = ref.watch(moviesSlideshowProvider);
     final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
 
-    return Column(children: [
-      const CustomAppbar(),
-      MoviesSlideshow(movies: slideShowMovies),
-      MovieHorizontalListview(
-        movies: nowPlayingMovies,
-        title: 'Now Playing',
-        date: '2025',
-        onMore: () =>
-            ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
-      ),
-    ]);
+    return SingleChildScrollView(
+      child: Column(children: [
+        const CustomAppbar(),
+        MoviesSlideshow(movies: slideShowMovies),
+        MovieHorizontalListview(
+          movies: nowPlayingMovies,
+          title: 'Now Playing',
+          date: '2025',
+          onMore: () =>
+              ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+        ),
+        MovieHorizontalListview(
+          movies: nowPlayingMovies,
+          title: 'Upcoming',
+          date: '2025',
+          onMore: () =>
+              ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+        ),
+        MovieHorizontalListview(
+          movies: nowPlayingMovies,
+          title: 'Popular',
+          date: '2025',
+          onMore: () =>
+              ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+        ),
+      ]),
+    );
   }
 }

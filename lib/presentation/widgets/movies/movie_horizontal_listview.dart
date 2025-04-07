@@ -38,26 +38,25 @@ class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 500,
-      width: double.infinity,
-      child: Column(
-        children: [
-          if (widget.title != null || widget.date != null)
-            _Title(title: widget.title, date: widget.date),
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              scrollDirection: Axis.horizontal,
-              itemCount: widget.movies.length,
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (ctx, idx) {
-                return _Slide(movie: widget.movies[idx]);
-              },
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.title != null || widget.date != null)
+          _Title(title: widget.title, date: widget.date),
+        SizedBox(
+          height: 290,
+          width: double.infinity,
+          child: ListView.builder(
+            controller: _scrollController,
+            scrollDirection: Axis.horizontal,
+            itemCount: widget.movies.length,
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (ctx, idx) {
+              return _Slide(movie: widget.movies[idx]);
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
