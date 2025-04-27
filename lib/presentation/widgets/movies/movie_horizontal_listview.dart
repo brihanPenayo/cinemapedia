@@ -77,24 +77,30 @@ class _Slide extends StatelessWidget {
         children: [
           SizedBox(
             width: width,
+            height: 225,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.network(
-                movie.posterPath,
-                width: width,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress != null) {
-                    return const Center(
-                      heightFactor: 5,
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  return FadeIn(child: child);
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.error);
-                },
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.black12,
+                ),
+                child: Image.network(
+                  movie.posterPath,
+                  width: width,
+                  height: 225,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress != null) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return child;
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(Icons.error);
+                  },
+                ),
               ),
             ),
           ),
