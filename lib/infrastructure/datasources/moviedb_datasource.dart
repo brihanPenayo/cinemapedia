@@ -12,14 +12,26 @@ class MoviedbDatasource extends MoviesDatasource {
         'api_key': Environment.movieDBApiKey,
         'language': 'es-MX'
       }));
-  @override
-  Future<List<Movie>> getNowPlayingMovies({int page = 1}) async {
-    final response =
-        await dio.get('/movie/now_playing', queryParameters: {'page': page});
-    final movieDBresponse = MovieDbResponse.fromJson(response.data);
+
+  List<Movie> _jsonToMovies(Map<String, dynamic> json) {
+    final movieDBresponse = MovieDbResponse.fromJson(json);
     final List<Movie> movies = movieDBresponse.results
         .map((movieDB) => MovieMapper.movieDBtoEntity(movieDB))
         .toList();
     return movies;
+  }
+
+  @override
+  Future<List<Movie>> getNowPlayingMovies({int page = 1}) async {
+    final response =
+        await dio.get('/movie/now_playing', queryParameters: {'page': page});
+    return _jsonToMovies(response.data);
+  }
+
+  @override
+  Future<List<Movie>> getPopularMovies({int page = 1}) async {
+    final response =
+        await dio.get('/movie/popular', queryParameters: {'page': page});
+    return _jsonToMovies(response.data);
   }
 }

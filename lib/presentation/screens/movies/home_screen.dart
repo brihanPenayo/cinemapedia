@@ -55,6 +55,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   Widget build(BuildContext context) {
     final slideShowMovies = ref.watch(moviesSlideshowProvider);
     final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
+    final popularMovies = ref.watch(popularMoviesProvider);
 
     return CustomScrollView(
       slivers: [
@@ -79,7 +80,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
                     ),
                     MovieHorizontalListview(
                       movies: nowPlayingMovies,
-                      title: 'Upcoming',
+                      title: 'Popular',
                       date: '2025',
                       onMore: () => ref
                           .read(nowPlayingMoviesProvider.notifier)
@@ -87,7 +88,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
                     ),
                     MovieHorizontalListview(
                       movies: nowPlayingMovies,
-                      title: 'Popular',
+                      title: 'Upcoming',
                       date: '2025',
                       onMore: () => ref
                           .read(nowPlayingMoviesProvider.notifier)
