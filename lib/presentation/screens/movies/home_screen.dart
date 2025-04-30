@@ -30,6 +30,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   void initState() {
     super.initState();
     ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+    ref.read(popularMoviesProvider.notifier).loadNextPage();
   }
 
   // Function to load next page, managing the loading state
@@ -42,6 +43,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
 
     // Assuming loadNextPage returns a Future
     await ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+    await ref.read(popularMoviesProvider.notifier).loadNextPage();
 
     // Check if the widget is still mounted before calling setState
     if (mounted) {
@@ -79,11 +81,11 @@ class _HomeViewState extends ConsumerState<_HomeView> {
                           .loadNextPage(),
                     ),
                     MovieHorizontalListview(
-                      movies: nowPlayingMovies,
+                      movies: popularMovies,
                       title: 'Popular',
                       date: '2025',
                       onMore: () => ref
-                          .read(nowPlayingMoviesProvider.notifier)
+                          .read(popularMoviesProvider.notifier)
                           .loadNextPage(),
                     ),
                     MovieHorizontalListview(
