@@ -31,6 +31,8 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     super.initState();
     ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
     ref.read(popularMoviesProvider.notifier).loadNextPage();
+    ref.read(topRatedMoviesProvider.notifier).loadNextPage();
+    ref.read(upcomingMoviesProvider.notifier).loadNextPage();
   }
 
   // Function to load next page, managing the loading state
@@ -44,6 +46,8 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     // Assuming loadNextPage returns a Future
     await ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
     await ref.read(popularMoviesProvider.notifier).loadNextPage();
+    await ref.read(upcomingMoviesProvider.notifier).loadNextPage();
+    await ref.read(topRatedMoviesProvider.notifier).loadNextPage();
 
     // Check if the widget is still mounted before calling setState
     if (mounted) {
@@ -58,6 +62,8 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     final slideShowMovies = ref.watch(moviesSlideshowProvider);
     final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
     final popularMovies = ref.watch(popularMoviesProvider);
+    final topRatedMovies = ref.watch(topRatedMoviesProvider);
+    final upcomingMovies = ref.watch(upcomingMoviesProvider);
 
     return CustomScrollView(
       slivers: [
@@ -73,9 +79,17 @@ class _HomeViewState extends ConsumerState<_HomeView> {
               (context, index) => Column(children: [
                     MoviesSlideshow(movies: slideShowMovies),
                     MovieHorizontalListview(
+                      movies: upcomingMovies,
+                      title: 'Upcoming',
+                      date: '2025',
+                      onMore: () => ref
+                          .read(upcomingMoviesProvider.notifier)
+                          .loadNextPage(),
+                    ),
+                    MovieHorizontalListview(
                       movies: nowPlayingMovies,
                       title: 'Now Playing',
-                      date: '2025',
+                      // date: '2025',
                       onMore: () => ref
                           .read(nowPlayingMoviesProvider.notifier)
                           .loadNextPage(),
@@ -83,17 +97,16 @@ class _HomeViewState extends ConsumerState<_HomeView> {
                     MovieHorizontalListview(
                       movies: popularMovies,
                       title: 'Popular',
-                      date: '2025',
+                      // date: '2025',
                       onMore: () => ref
                           .read(popularMoviesProvider.notifier)
                           .loadNextPage(),
                     ),
                     MovieHorizontalListview(
-                      movies: nowPlayingMovies,
-                      title: 'Upcoming',
-                      date: '2025',
+                      movies: topRatedMovies,
+                      title: 'Top Rated',
                       onMore: () => ref
-                          .read(nowPlayingMoviesProvider.notifier)
+                          .read(topRatedMoviesProvider.notifier)
                           .loadNextPage(),
                     ),
                   ]),

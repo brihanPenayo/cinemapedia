@@ -12,7 +12,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         child: BottomNavigationBar(
             elevation: 0,
             iconSize: 25,
-            currentIndex: 2,
+            currentIndex: 0,
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
