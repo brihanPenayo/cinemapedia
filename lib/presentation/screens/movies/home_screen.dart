@@ -1,3 +1,4 @@
+import 'package:cinemapedia/domain/entities/movies.dart';
 import 'package:cinemapedia/presentation/providers/providers.dart';
 import 'package:cinemapedia/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -59,12 +60,45 @@ class _HomeViewState extends ConsumerState<_HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(initialLoadingProvider);
+
+    if (isLoading) return const FullScreenLoader();
+
     final slideShowMovies = ref.watch(moviesSlideshowProvider);
     final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
     final popularMovies = ref.watch(popularMoviesProvider);
     final topRatedMovies = ref.watch(topRatedMoviesProvider);
     final upcomingMovies = ref.watch(upcomingMoviesProvider);
 
+    return _CustomScrollView(
+        slideShowMovies: slideShowMovies,
+        upcomingMovies: upcomingMovies,
+        ref: ref,
+        nowPlayingMovies: nowPlayingMovies,
+        popularMovies: popularMovies,
+        topRatedMovies: topRatedMovies);
+  }
+}
+
+class _CustomScrollView extends StatelessWidget {
+  const _CustomScrollView({
+    required this.slideShowMovies,
+    required this.upcomingMovies,
+    required this.ref,
+    required this.nowPlayingMovies,
+    required this.popularMovies,
+    required this.topRatedMovies,
+  });
+
+  final List<Movie> slideShowMovies;
+  final List<Movie> upcomingMovies;
+  final WidgetRef ref;
+  final List<Movie> nowPlayingMovies;
+  final List<Movie> popularMovies;
+  final List<Movie> topRatedMovies;
+
+  @override
+  Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
         const SliverAppBar(
