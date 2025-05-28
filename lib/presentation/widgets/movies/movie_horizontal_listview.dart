@@ -1,7 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/config/helpers/human_formats.dart';
 import 'package:cinemapedia/domain/entities/movies.dart';
+import 'package:cinemapedia/presentation/screens/movies/movie_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class MovieHorizontalListview extends StatefulWidget {
   final List<Movie> movies;
@@ -69,69 +71,74 @@ class _Slide extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme;
     const width = 150.0;
-    return Container(
-      width: width,
-      margin: const EdgeInsets.only(left: 15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: width,
-            height: 225,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.black12,
-                ),
-                child: Image.network(
-                  movie.posterPath,
-                  width: width,
-                  height: 225,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress != null) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    return child;
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.error);
-                  },
+    return GestureDetector(
+      onTap: () {
+        context.push('/movie/${movie.id}');
+      },
+      child: Container(
+        width: width,
+        margin: const EdgeInsets.only(left: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: width,
+              height: 225,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.black12,
+                  ),
+                  child: Image.network(
+                    movie.posterPath,
+                    width: width,
+                    height: 225,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress != null) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return child;
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(Icons.error);
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            width: width,
-            child: Text(
-              movie.title,
-              maxLines: 2,
-              style: textStyle.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+            const SizedBox(height: 10),
+            SizedBox(
+              width: width,
+              child: Text(
+                movie.title,
+                maxLines: 2,
+                style: textStyle.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          Row(
-            children: [
-              const Icon(Icons.star, color: Colors.amber, size: 16),
-              Text(
-                movie.voteAverage.toStringAsFixed(2),
-                style: textStyle.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold, color: Colors.black45),
-              ),
-              const Spacer(),
-              Text(
-                HumanFormats.number(movie.popularity),
-                style: textStyle.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold, color: Colors.black45),
-              ),
-            ],
-          ),
-        ],
+            Row(
+              children: [
+                const Icon(Icons.star, color: Colors.amber, size: 16),
+                Text(
+                  movie.voteAverage.toStringAsFixed(2),
+                  style: textStyle.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold, color: Colors.black45),
+                ),
+                const Spacer(),
+                Text(
+                  HumanFormats.number(movie.popularity),
+                  style: textStyle.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold, color: Colors.black45),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

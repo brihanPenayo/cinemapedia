@@ -1,4 +1,5 @@
 import 'package:cinemapedia/domain/entities/movies.dart';
+import 'package:cinemapedia/infrastructure/models/movieDB/movie_details.dart';
 import 'package:cinemapedia/infrastructure/models/movieDB/movie_moviedb.dart';
 
 class MovieMapper {
@@ -21,5 +22,26 @@ class MovieMapper {
         video: movieFromMovieDB.video,
         voteAverage: movieFromMovieDB.voteAverage,
         voteCount: movieFromMovieDB.voteCount,
+      );
+
+  static Movie movieDetailsToEntity(MovieDetails moviedb) => Movie(
+        adult: moviedb.adult,
+        backdropPath: moviedb.backdropPath != ''
+            ? 'https://image.tmdb.org/t/p/w500${moviedb.backdropPath}'
+            : 'https://static.vecteezy.com/system/resources/previews/004/639/366/non_2x/error-404-not-found-text-design-vector.jpg',
+        genreIds: moviedb.genres.map((gen) => gen.name.toString()).toList(),
+        id: moviedb.id,
+        originalLanguage: moviedb.originalLanguage,
+        originalTitle: moviedb.originalTitle,
+        overview: moviedb.overview,
+        popularity: moviedb.popularity,
+        posterPath: moviedb.posterPath != ''
+            ? 'https://image.tmdb.org/t/p/w500${moviedb.posterPath}'
+            : 'https://linnea.com.ar/wp-content/uploads/2018/09/404PosterNotFound.jpg',
+        releaseDate: moviedb.releaseDate,
+        title: moviedb.title,
+        video: moviedb.video,
+        voteAverage: moviedb.voteAverage,
+        voteCount: moviedb.voteCount,
       );
 }
