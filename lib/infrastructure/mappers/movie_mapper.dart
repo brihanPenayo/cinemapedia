@@ -1,5 +1,6 @@
+import 'package:cinemapedia/domain/entities/genre.dart' as domain;
 import 'package:cinemapedia/domain/entities/movies.dart';
-import 'package:cinemapedia/infrastructure/models/movieDB/movie_details.dart';
+import 'package:cinemapedia/infrastructure/models/movieDB/movie_details.dart' hide Genre;
 import 'package:cinemapedia/infrastructure/models/movieDB/movie_moviedb.dart';
 
 class MovieMapper {
@@ -8,7 +9,9 @@ class MovieMapper {
         backdropPath: movieFromMovieDB.backdropPath != ''
             ? 'https://image.tmdb.org/t/p/w500${movieFromMovieDB.backdropPath}'
             : 'https://static.vecteezy.com/system/resources/previews/004/639/366/non_2x/error-404-not-found-text-design-vector.jpg',
-        genreIds: movieFromMovieDB.genreIds.map((id) => id.toString()).toList(),
+        genres: movieFromMovieDB.genreIds
+            .map((id) => domain.Genre(id: id, name: id.toString()))
+            .toList(),
         id: movieFromMovieDB.id,
         originalLanguage: movieFromMovieDB.originalLanguage,
         originalTitle: movieFromMovieDB.originalTitle,
@@ -29,7 +32,9 @@ class MovieMapper {
         backdropPath: moviedb.backdropPath != ''
             ? 'https://image.tmdb.org/t/p/w500${moviedb.backdropPath}'
             : 'https://static.vecteezy.com/system/resources/previews/004/639/366/non_2x/error-404-not-found-text-design-vector.jpg',
-        genreIds: moviedb.genres.map((gen) => gen.name.toString()).toList(),
+        genres: moviedb.genres
+            .map((genre) => domain.Genre(id: genre.id, name: genre.name))
+            .toList(),
         id: moviedb.id,
         originalLanguage: moviedb.originalLanguage,
         originalTitle: moviedb.originalTitle,

@@ -1,7 +1,9 @@
+import 'package:cinemapedia/domain/entities/genre.dart';
+
 class Movie {
   final bool adult;
   final String backdropPath;
-  final List<String> genreIds;
+  final List<Genre> genres;
   final int id;
   final String originalLanguage;
   final String originalTitle;
@@ -17,7 +19,7 @@ class Movie {
   Movie(
       {required this.adult,
       required this.backdropPath,
-      required this.genreIds,
+      required this.genres,
       required this.id,
       required this.originalLanguage,
       required this.originalTitle,
