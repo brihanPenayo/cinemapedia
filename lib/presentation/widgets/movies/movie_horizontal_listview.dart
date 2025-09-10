@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/config/helpers/human_formats.dart';
 import 'package:cinemapedia/domain/entities/movies.dart';
 import 'package:cinemapedia/presentation/screens/movies/movie_screen.dart';
+import 'package:cinemapedia/presentation/widgets/shared/marquee_text.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -111,31 +112,42 @@ class _Slide extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            SizedBox(
-              width: width,
-              child: Text(
-                movie.title,
-                maxLines: 2,
-                style: textStyle.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: width,
+                    child: MarqueeText(
+                      text: movie.title,
+                      textAlign: TextAlign.left,
+                      style: textStyle.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                      Text(
+                        movie.voteAverage.toStringAsFixed(2),
+                        style: textStyle.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.bold, color: Colors.black45),
+                      ),
+                      const Spacer(),
+                      Flexible(
+                        child: Text(
+                          HumanFormats.number(movie.popularity),
+                          style: textStyle.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black45),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ),
-            Row(
-              children: [
-                const Icon(Icons.star, color: Colors.amber, size: 16),
-                Text(
-                  movie.voteAverage.toStringAsFixed(2),
-                  style: textStyle.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold, color: Colors.black45),
-                ),
-                const Spacer(),
-                Text(
-                  HumanFormats.number(movie.popularity),
-                  style: textStyle.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold, color: Colors.black45),
-                ),
-              ],
             ),
           ],
         ),

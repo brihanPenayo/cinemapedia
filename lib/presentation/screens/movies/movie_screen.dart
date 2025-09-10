@@ -1,5 +1,7 @@
+import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/movies.dart';
-import 'package:cinemapedia/presentation/providers/movies/movie_detail_provider.dart';
+import 'package:cinemapedia/presentation/providers/providers.dart';
+import 'package:cinemapedia/presentation/widgets/shared/marquee_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -19,11 +21,13 @@ class _MovieScreenState extends ConsumerState<MovieScreen> {
   void initState() {
     super.initState();
     ref.read(movieDetailProvider.notifier).loadMovie(widget.movieID);
+    ref.read(actorsByMovieProvider.notifier).loadActors(widget.movieID);
   }
 
   @override
   Widget build(BuildContext context) {
     final Movie? movie = ref.watch(movieDetailProvider)[widget.movieID];
+    final actors = ref.watch(actorsByMovieProvider)[widget.movieID];
 
     if (movie == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -38,8 +42,111 @@ class _MovieScreenState extends ConsumerState<MovieScreen> {
           SliverToBoxAdapter(
             child: _MovieDescription(movie: movie),
           ),
+          SliverToBoxAdapter(
+            child: _ActorsList(actors: actors),
+          ),
         ],
       ),
+    );
+  }
+}
+
+class _ActorsList extends StatelessWidget {
+  final List<Actor>? actors;
+  const _ActorsList({required this.actors});
+
+  @override
+  Widget build(BuildContext context) {
+    if (actors == null || actors!.isEmpty) {
+      return const SizedBox();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text(
+            'Reparto',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxHeight: 280,
+          ),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: actors!.length,
+            itemBuilder: (context, index) {
+              final actor = actors![index];
+              return Container(
+                width: 120,
+                margin: const EdgeInsets.only(right: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                          width: 120,
+                          height: 160,
+                          color: Colors.grey[300],
+                          child: Image.network(
+                            actor.profilePath,
+                            width: 120,
+                            height: 160,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(
+                                Icons.person,
+                                size: 50,
+                                color: Colors.grey,
+                              );
+                            },
+                          )),
+                    ),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: 120,
+                      height: 20,
+                      child: MarqueeText(
+                        text: actor.name,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Flexible(
+                      child: Text(
+                        actor.character?.trim() ?? '',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.left,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 16),
+      ],
     );
   }
 }
@@ -52,10 +159,7 @@ class _MovieDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme;
 
-    final genres = movie.genres
-        .take(3) // Limitar a 3 géneros principales
-        .map((genre) => genre.name)
-        .join(' • ');
+    final genres = movie.genres.take(3).map((genre) => genre.name).join(' • ');
 
     return Container(
       width: double.infinity,
@@ -70,7 +174,7 @@ class _MovieDescription extends StatelessWidget {
           ],
         ),
       ),
-      padding: const EdgeInsets.only(top: 20, bottom: 100, left: 20, right: 20),
+      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -147,10 +251,12 @@ class _CustomSliverAppbar extends StatelessWidget {
       backgroundColor: Colors.black,
       expandedHeight: screenSize.height * 0.7,
       foregroundColor: Colors.white,
+      pinned: true,
       leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => context.pop()),
       flexibleSpace: FlexibleSpaceBar(
+        titlePadding: const EdgeInsets.only(left: 50, bottom: 16),
         background: Stack(
           children: [
             SizedBox(
